@@ -34,7 +34,7 @@ pub mod ffi;
 pub mod migrator;
 // Include the `msg_types` module, which is generated from msg_types.proto.
 pub mod msg_types {
-    include!(concat!(env!("OUT_DIR"), "/msg_types.rs"));
+    include!("mozilla.appservices.fxaclient.protobuf.rs");
 }
 mod http_client;
 mod oauth;
@@ -61,6 +61,7 @@ pub struct FirefoxAccount {
     client: Arc<FxAClient>,
     state: State,
     flow_store: HashMap<String, OAuthFlow>,
+    attached_clients_cache: Option<CachedResponse<Vec<http_client::GetAttachedClientResponse>>>,
 }
 
 impl FirefoxAccount {
@@ -69,6 +70,7 @@ impl FirefoxAccount {
             client: Arc::new(http_client::Client::new()),
             state,
             flow_store: HashMap::new(),
+            attached_clients_cache: None,
         }
     }
 
@@ -137,6 +139,7 @@ impl FirefoxAccount {
     pub fn start_over(&mut self) {
         self.state = self.state.start_over();
         self.flow_store.clear();
+        self.attached_clients_cache = None;
     }
 
     /// Get the Sync Token Server endpoint URL.
@@ -239,20 +242,29 @@ impl FirefoxAccount {
     }
 }
 
+#[derive(Debug, Serialize)]
+#[serde(tag = "eventType", content = "data")]
+#[serde(rename_all = "camelCase")]
 pub enum AccountEvent {
     IncomingDeviceCommand(Box<IncomingDeviceCommand>),
     ProfileUpdated,
     AccountAuthStateChanged,
     AccountDestroyed,
+    // Can be removed when https://github.com/serde-rs/serde/pull/1695 lands.
+    #[serde(rename_all = "camelCase")]
     DeviceConnected {
         device_name: String,
     },
+    #[serde(rename_all = "camelCase")]
     DeviceDisconnected {
         device_id: String,
         is_local_device: bool,
     },
 }
 
+#[derive(Debug, Serialize)]
+#[serde(tag = "commandType", content = "data")]
+#[serde(rename_all = "camelCase")]
 pub enum IncomingDeviceCommand {
     TabReceived {
         sender: Option<Device>,
