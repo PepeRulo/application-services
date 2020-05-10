@@ -52,10 +52,9 @@ open class RustFxAccount {
     /// Throws `FirefoxAccountError.Unauthorized` if we couldn't find any suitable access token
     /// to make that call. The caller should then start the OAuth Flow again with
     /// the "profile" scope.
-    open func getProfile(ignoreCache: Bool) throws -> Profile {
-        let ignoreCacheArg = UInt8(ignoreCache ? 1 : 0)
+    open func getProfile(forceRefresh: Bool) throws -> Profile {
         let ptr = try rustCall { err in
-            fxa_profile(self.raw, ignoreCacheArg, err)
+            fxa_profile(self.raw, forceRefresh, err)
         }
         defer { fxa_bytebuffer_free(ptr) }
         let msg = try! MsgTypes_Profile(serializedData: Data(rustBuffer: ptr))
@@ -182,10 +181,9 @@ open class RustFxAccount {
         }
     }
 
-    open func getDevices(ignoreCache: Bool = false) throws -> [Device] {
-        let ignoreCacheArg = UInt8(ignoreCache ? 1 : 0)
+    open func fetchDevices() throws -> [Device] {
         let ptr = try rustCall { err in
-            fxa_get_devices(self.raw, ignoreCacheArg, err)
+            fxa_get_devices(self.raw, err)
         }
         defer { fxa_bytebuffer_free(ptr) }
         let msg = try! MsgTypes_Devices(serializedData: Data(rustBuffer: ptr))

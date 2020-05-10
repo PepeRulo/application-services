@@ -91,11 +91,10 @@ FirefoxAccountHandle fxa_new(const char *_Nonnull content_base,
                              FxAError *_Nonnull out);
 
 FxARustBuffer fxa_profile(FirefoxAccountHandle handle,
-                          uint8_t ignore_cache,
+                          bool ignore_cache,
                           FxAError *_Nonnull out);
 
 FxARustBuffer fxa_get_devices(FirefoxAccountHandle handle,
-                              uint8_t ignore_cache,
                               FxAError *_Nonnull out);
 
 FxARustBuffer fxa_poll_device_commands(FirefoxAccountHandle handle,

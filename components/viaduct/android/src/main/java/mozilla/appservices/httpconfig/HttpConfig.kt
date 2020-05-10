@@ -65,7 +65,11 @@ object RustHttpConfig {
                 } else {
                     Request.Redirect.MANUAL
                 },
-                cookiePolicy = Request.CookiePolicy.OMIT,
+                cookiePolicy = if (request.includeCookies) {
+                    Request.CookiePolicy.INCLUDE
+                } else {
+                    Request.CookiePolicy.OMIT
+                },
                 useCaches = request.useCaches
         )
     }

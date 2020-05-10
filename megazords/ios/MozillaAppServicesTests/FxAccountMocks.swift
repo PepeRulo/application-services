@@ -15,7 +15,7 @@ class MockFxAccount: FxAccount {
         case clearAccessTokenCache
         case getAccessToken
         case initializeDevice
-        case getDevices
+        case fetchDevices
     }
 
     init() {
@@ -38,8 +38,8 @@ class MockFxAccount: FxAccount {
         invocations.append(.initializeDevice)
     }
 
-    override func getDevices(ignoreCache _: Bool) throws -> [Device] {
-        invocations.append(.getDevices)
+    override func fetchDevices() throws -> [Device] {
+        invocations.append(.fetchDevices)
         return []
     }
 
@@ -60,12 +60,12 @@ class MockFxAccount: FxAccount {
         invocations.append(.clearAccessTokenCache)
     }
 
-    override func getAccessToken(scope _: String, ttl _: UInt64? = nil) throws -> AccessTokenInfo {
+    override func getAccessToken(scope _: String, ttl: UInt64? = nil) throws -> AccessTokenInfo {
         invocations.append(.getAccessToken)
         return AccessTokenInfo(scope: "profile", token: "toktok")
     }
 
-    override func getProfile(ignoreCache _: Bool) throws -> Profile {
+    override func getProfile(forceRefresh _: Bool) throws -> Profile {
         invocations.append(.getProfile)
         return Profile(uid: "uid", email: "foo@bar.bobo")
     }

@@ -22,10 +22,10 @@ class FxAccount: RustFxAccount {
         persistCallback = nil
     }
 
-    override func getProfile(ignoreCache: Bool) throws -> Profile {
+    override func getProfile(forceRefresh: Bool) throws -> Profile {
         defer { tryPersistState() }
         return try notifyAuthErrors {
-            try super.getProfile(ignoreCache: ignoreCache)
+            try super.getProfile(forceRefresh: forceRefresh)
         }
     }
 
@@ -67,9 +67,9 @@ class FxAccount: RustFxAccount {
         }
     }
 
-    override func getDevices(ignoreCache: Bool = false) throws -> [Device] {
+    override func fetchDevices() throws -> [Device] {
         return try notifyAuthErrors {
-            try super.getDevices(ignoreCache: ignoreCache)
+            try super.fetchDevices()
         }
     }
 

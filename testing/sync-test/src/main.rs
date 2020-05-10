@@ -10,7 +10,6 @@ mod auth;
 mod logins;
 mod tabs;
 mod testing;
-mod sync15;
 
 use crate::auth::{FxaConfigUrl, TestUser};
 use crate::testing::TestGroup;
@@ -99,13 +98,7 @@ pub fn main() {
     let opts = Opts::from_args();
     println!("### Running sync integration tests ###");
     init_testing();
-    // Commenting these out to make the test runs shorter and less
-    // noisy. It would be nice to add an option to `Opts` to only
-    // run certain groups.
-    //
-    // run_test_groups(&opts, vec![crate::logins::get_test_group()]);
-    // run_test_groups(&opts, vec![crate::tabs::get_test_group()]);
-    run_test_groups(&opts, vec![crate::sync15::get_test_group()]);
-
-    println!("\n### Sync integration tests passed!");
+    run_test_groups(&opts, vec![crate::logins::get_test_group()]);
+    run_test_groups(&opts, vec![crate::tabs::get_test_group()]);
+    println!("### Sync integration tests passed!");
 }

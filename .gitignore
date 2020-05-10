@@ -35,8 +35,3 @@ automation/symbols-generation/bin/
 
 # Python
 __pycache__
-
-# Other
-setuptools-33.1.1.zip
-tools/gyp/
-

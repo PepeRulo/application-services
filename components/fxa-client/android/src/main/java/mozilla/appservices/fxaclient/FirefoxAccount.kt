@@ -148,8 +148,7 @@ class FirefoxAccount(handle: FxaHandle, persistCallback: PersistCallback?) : Aut
      */
     fun getProfile(ignoreCache: Boolean): Profile {
         val profileBuffer = rustCallWithLock { e ->
-            val ignoreCacheArg: Byte = if (ignoreCache) { 1 } else { 0 }
-            LibFxAFFI.INSTANCE.fxa_profile(this.handle.get(), ignoreCacheArg, e)
+            LibFxAFFI.INSTANCE.fxa_profile(this.handle.get(), ignoreCache, e)
         }
         this.tryPersistState()
         try {
@@ -466,10 +465,9 @@ class FirefoxAccount(handle: FxaHandle, persistCallback: PersistCallback?) : Aut
      *
      * This performs network requests, and should not be used on the main thread.
      */
-    fun getDevices(ignoreCache: Boolean = false): Array<Device> {
+    fun getDevices(): Array<Device> {
         val devicesBuffer = rustCall { e ->
-            val ignoreCacheArg: Byte = if (ignoreCache) { 1 } else { 0 }
-            LibFxAFFI.INSTANCE.fxa_get_devices(this.handle.get(), ignoreCacheArg, e)
+            LibFxAFFI.INSTANCE.fxa_get_devices(this.handle.get(), e)
         }
         try {
             val devices = MsgTypes.Devices.parseFrom(devicesBuffer.asCodedInputStream()!!)

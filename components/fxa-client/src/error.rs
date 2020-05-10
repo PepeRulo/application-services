@@ -59,9 +59,6 @@ pub enum ErrorKind {
     #[fail(display = "Unknown command: {}", _0)]
     UnknownCommand(String),
 
-    #[fail(display = "Send Tab diagnosis error: {}", _0)]
-    SendTabDiagnosisError(&'static str),
-
     #[fail(display = "Empty names")]
     EmptyOAuthScopeNames,
 

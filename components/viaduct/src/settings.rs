@@ -18,6 +18,7 @@ pub struct Settings {
     pub read_timeout: Option<Duration>,
     pub connect_timeout: Option<Duration>,
     pub follow_redirects: bool,
+    pub include_cookies: bool,
     pub use_caches: bool,
     _priv: (),
 }
@@ -33,6 +34,7 @@ pub static GLOBAL_SETTINGS: &Settings = &Settings {
     read_timeout: Some(TIMEOUT_DURATION),
     connect_timeout: Some(TIMEOUT_DURATION),
     follow_redirects: true,
+    include_cookies: false,
     use_caches: false,
     _priv: (),
 };
